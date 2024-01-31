@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         云学堂全自动刷视频 yunxuetang.cn
 // @namespace    zhou__jianlei
-// @version      0.16.5
+// @version      0.16.6
 // @description  云学堂视频播放 文档浏览 自动学习未学习的视频 自动提交(自用)
 // @author       zhou__jianlei
 // @license      MIT
