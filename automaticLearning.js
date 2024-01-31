@@ -303,6 +303,13 @@
             myPlayer.setPlaybackRate(2);
             initVideoPauseTimes();
             console.log("播放中...啥也不操作了");
+        } else if (myPlayer.getState() == 'buffering') { // 缓冲
+            layer.msg("缓冲中...刷新");
+            setTimeout(function () {
+                initVideoPauseTimes();
+                window.location.reload();
+            }, 1000);
+
         } else if (myPlayer.getState() == 'paused') { // 暂停
             console.log("暂停啦！！！");
             videoPauseTimesInc();
