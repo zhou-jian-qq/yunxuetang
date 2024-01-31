@@ -2,7 +2,7 @@
 // @name         云学堂全自动刷视频 yunxuetang.cn
 // @namespace    zhou__jianlei
 // @version      0.16.6
-// @description  云学堂视频播放 文档浏览 自动学习未学习的视频 自动提交(自用)
+// @description  云学堂视频播放 文档浏览 自动筛选学习未学习的视频 自动提交考试
 // @author       zhou__jianlei
 // @license      MIT
 // @icon         https://picobd.yxt.com/orgs/yxt_malladmin/mvcpic/image/201811/71672740d9524c53ac3d60b6a4123bca.png
@@ -306,7 +306,7 @@
             console.log("播放中...啥也不操作了");
         } else if (myPlayer.getState() == 'buffering') { // 缓冲
             layer.msg("缓冲中...刷新");
-            setTimeout(function () {
+            window.setTimeout(function () {
                 initVideoPauseTimes();
                 window.location.reload();
             }, 1000);
