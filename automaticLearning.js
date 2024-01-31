@@ -4,6 +4,7 @@
 // @version      0.16.5
 // @description  云学堂视频播放 文档浏览 自动学习未学习的视频 自动提交(自用)
 // @author       zhou__jianlei
+// @license      MIT
 // @icon         https://picobd.yxt.com/orgs/yxt_malladmin/mvcpic/image/201811/71672740d9524c53ac3d60b6a4123bca.png
 // @match        http*://*.yunxuetang.cn/plan/*.html
 // @match        http*://*.yunxuetang.cn/kng/*/document/*
