@@ -111,7 +111,7 @@
                 $('#btnStartStudy').click();
             }, 3 * 1000)
         }
-    } else if (path.match(/^\/kng\/.*/g)) { // 课程包列表页
+    } else if (path.match(/^\/kng\/knowledgecatalogsearch.*/g)) { // 课程包列表页
         // 刷新页面同步进度
         console.log('课程包列表页...' + getRefreshKng());
         if (getRefreshKng()) {
