@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         云学堂全自动刷视频 yunxuetang.cn
 // @namespace    zhou__jianlei
-// @version      0.16.6
+// @version      0.16.7
 // @description  云学堂视频播放 文档浏览 自动筛选学习未学习的视频 自动提交考试
 // @author       zhou__jianlei
 // @license      MIT
@@ -39,6 +39,8 @@
     const COURSE_PACKAGE_URL_ADDRESS_KEY = "kng_href_key";
     // 课程列表页刷新标记
     const COURSE_PACKAGE_REFRESH_KEY = "course_package_refresh_key";
+    // 试卷页面是否新打开页面
+    const EXAM_OPEN_PAGE_KEY = "exam_open_page_key";
     // 自动提交考试 true
     // initAutoSubmit();
 
@@ -162,10 +164,23 @@
         // 获取考试是否自动提交
         if (isAutoSubmit()) {
             if ($('#btnTest').val() == '开始考试') {
-                layer.msg('自动提交，5秒后进入考试');
-                window.setTimeout(function () {
-                    goExam();
-                }, 1000 * 5);
+            layer.msg('自动提交，5秒后进入考试');
+            window.setTimeout(function () {
+                goExam();
+            }, 1000 * 5);
+                            // 监听页面切换和新开页签事件
+                            window.onbeforeunload = function (event) {
+                                // 检测当前页面是否可见
+                                if (document.hidden) {
+                                    // 在这里执行新开页签的操作
+                                    console.log("新开页签");
+                                    localStorage.setItem(EXAM_OPEN_PAGE_KEY, true);
+                                } else {
+                                    // 在这里执行在原有页面打开的操作
+                                    console.log("在原有页面打开");
+                                    localStorage.setItem(EXAM_OPEN_PAGE_KEY, false);
+                                }
+                            };
             } else {
                 let kng_href = getKngUrl();
                 layer.msg('已完成30秒后返回列表页：' + kng_href);
@@ -192,7 +207,7 @@
                 console.log("点击id为btnMyConfirm 的按钮");
                 window.setTimeout(function () {
                     $("#btnMyConfirm").click();
-                }, 1000 * 8);
+                }, 1000 * 6);
             }
         }
 
@@ -202,12 +217,14 @@
         if (isAutoSubmit()) {
             let kng_href = getKngUrl();
             layer.msg('已完成3秒后返回列表页：' + kng_href);
+            console.log('是否为新开页面' + localStorage.getItem(EXAM_OPEN_PAGE_KEY))
             window.setTimeout(function () {
-                if (getQueryString('packageId')) {
-                    window.open(kng_href, '_self');
-                } else {
+                //if (getQueryString('packageId')) {
+                if (localStorage.getItem(EXAM_OPEN_PAGE_KEY) === 'true') {
                     // 关闭当前页
                     window.close();
+                } else {
+                    window.open(kng_href, '_self');
                 }
             }, 3 * 1000)
         }
