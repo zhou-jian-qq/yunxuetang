@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         云学堂全自动刷视频 yunxuetang.cn
 // @namespace    https://github.com/zhou-jian-qq/yunxuetang
-// @version      0.16.10
+// @version      0.16.11
 // @description  云学堂视频播放 文档浏览 自动筛选学习未学习的视频 自动提交考试
 // @author       zhou__jianlei
 // @license      MIT
@@ -21,7 +21,6 @@
 // @match        http*://*.yunxuetang.cn/kng/knowledgecatalogsearch.htm*
 // @grant        GM_xmlhttpRequest
 // @grant        unsafeWindow
-// @require      https://code.jquery.com/jquery-2.2.4.min.js
 // ==/UserScript==
 
 (function () {
