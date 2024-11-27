@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         云学堂全自动刷视频 yunxuetang.cn
 // @namespace    https://github.com/zhou-jian-qq/yunxuetang
-// @version      0.16.8
+// @version      0.16.9
 // @description  云学堂视频播放 文档浏览 自动筛选学习未学习的视频 自动提交考试
 // @author       zhou__jianlei
 // @license      MIT
@@ -112,6 +112,8 @@
             }, 3 * 1000)
         }
     } else if (path.match(/^\/kng\/knowledgecatalogsearch.*/g)) { // 课程包列表页
+        // 每页的数量
+        let num = $('.titletext').val() //20
         // 刷新页面同步进度
         console.log('课程包列表页...' + getRefreshKng());
         if (getRefreshKng()) {
@@ -130,11 +132,18 @@
                         window.setTimeout(function () {
                             if (attr) {
                                 let arr = attr.split("'");
-                                console.info('RUL链接： ' + arr[1]);
+                                console.info('RUL链接： ', arr[1]);
                                 window.open(arr[1], '_self');
                             }
                         }, 1000 * 10);
                         return false;
+                    } else {
+                        if (index == num-1) {
+                            //获取下一页的按钮
+                            let nextPageHref = $('.pagetext').eq(1).attr('href')
+                            console.info('下一页RUL链接： ', nextPageHref);
+                            window.open(nextPageHref, '_self');
+                        }
                     }
                 }
             )
@@ -164,23 +173,23 @@
         // 获取考试是否自动提交
         if (isAutoSubmit()) {
             if ($('#btnTest').val() == '开始考试') {
-            layer.msg('自动提交，5秒后进入考试');
-            window.setTimeout(function () {
-                goExam();
-            }, 1000 * 5);
-                            // 监听页面切换和新开页签事件
-                            window.onbeforeunload = function (event) {
-                                // 检测当前页面是否可见
-                                if (document.hidden) {
-                                    // 在这里执行新开页签的操作
-                                    console.log("新开页签");
-                                    localStorage.setItem(EXAM_OPEN_PAGE_KEY, true);
-                                } else {
-                                    // 在这里执行在原有页面打开的操作
-                                    console.log("在原有页面打开");
-                                    localStorage.setItem(EXAM_OPEN_PAGE_KEY, false);
-                                }
-                            };
+                layer.msg('自动提交，5秒后进入考试');
+                window.setTimeout(function () {
+                    goExam();
+                }, 1000 * 5);
+                // 监听页面切换和新开页签事件
+                window.onbeforeunload = function (event) {
+                    // 检测当前页面是否可见
+                    if (document.hidden) {
+                        // 在这里执行新开页签的操作
+                        console.log("新开页签");
+                        localStorage.setItem(EXAM_OPEN_PAGE_KEY, true);
+                    } else {
+                        // 在这里执行在原有页面打开的操作
+                        console.log("在原有页面打开");
+                        localStorage.setItem(EXAM_OPEN_PAGE_KEY, false);
+                    }
+                };
             } else {
                 let kng_href = getKngUrl();
                 layer.msg('已完成30秒后返回列表页：' + kng_href);
@@ -257,6 +266,8 @@
         localStorage.setItem(COURSE_PACKAGE_REFRESH_KEY, val === true ? true : false);
     }
     function initRefreshKng() {
+        //删除刷新课程包标记
+        // localStorage.removeItem(COURSE_PACKAGE_REFRESH_KEY)
         setRefreshKng(false);
     }
     // 检测多开弹窗
@@ -313,8 +324,6 @@
 
     // 检测播放状态
     function detectPlaybackStatus() {
-        let numberOfVideoPlaybackPauses = getVideoPauseTimes();
-        console.info('视频暂停次数：' + numberOfVideoPlaybackPauses)
         const date = new Date();
         console.info(date.toLocaleString() + ' 检测播放状态...')
         if (myPlayer.getState() == 'playing') {
@@ -330,8 +339,10 @@
 
         } else if (myPlayer.getState() == 'paused') { // 暂停
             console.log("暂停啦！！！");
+            let videoPauseTimes = getVideoPauseTimes();
+            console.info('视频暂停次数：' + videoPauseTimes)
             videoPauseTimesInc();
-            if (numberOfVideoPlaybackPauses > 5) {
+            if (videoPauseTimes > 5) {
                 console.log("暂停次数过多，自动刷新页面");
                 initVideoPauseTimes();
                 window.location.reload();
