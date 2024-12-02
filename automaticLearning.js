@@ -125,7 +125,7 @@
                 function (index, item) {
                     let text = $(item).parent().children('div').eq(0).children('span').text();
                     console.log(text)
-                    if (text == '') {
+                    if (text != '已完成') {
                         console.log(index + ' 点击这个未学习的');
                         let attr = $(item).children('div').eq(0).children('.text-normal').attr('onclick') + '';
                         window.setTimeout(function () {
