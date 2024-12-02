@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         云学堂全自动刷视频 yunxuetang.cn
 // @namespace    https://github.com/zhou-jian-qq/yunxuetang
-// @version      0.16.11
+// @version      0.16.12
 // @description  云学堂视频播放 文档浏览 自动筛选学习未学习的视频 自动提交考试
 // @author       zhou__jianlei
 // @license      MIT
@@ -126,7 +126,7 @@
                     let text = $(item).parent().children('div').eq(0).children('span').text();
                     console.log(text)
                     if (text != '已完成') {
-                        console.log(index + ' 点击这个未学习的');
+                        console.log(index + ' 点击这个' + text + '的');
                         let attr = $(item).children('div').eq(0).children('.text-normal').attr('onclick') + '';
                         window.setTimeout(function () {
                             if (attr) {
@@ -137,7 +137,7 @@
                         }, 1000 * 10);
                         return false;
                     } else {
-                        if (index == num-1) {
+                        if (index == num - 1) {
                             //获取下一页的按钮
                             let nextPageHref = $('.pagetext').eq(1).attr('href')
                             console.info('下一页RUL链接： ', nextPageHref);
