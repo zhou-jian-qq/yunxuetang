@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         云学堂全自动刷视频 yunxuetang.cn
 // @namespace    https://github.com/zhou-jian-qq/yunxuetang
-// @version      0.16.12
+// @version      0.16.13
 // @description  云学堂视频播放 文档浏览 自动筛选学习未学习的视频 自动提交考试
 // @author       zhou__jianlei
 // @license      MIT
@@ -125,7 +125,7 @@
                 function (index, item) {
                     let text = $(item).parent().children('div').eq(0).children('span').text();
                     console.log(text)
-                    if (text != '已完成') {
+                    if (text == '') {
                         console.log(index + ' 点击这个' + text + '的');
                         let attr = $(item).children('div').eq(0).children('.text-normal').attr('onclick') + '';
                         window.setTimeout(function () {
@@ -191,10 +191,10 @@
                 };
             } else {
                 let kng_href = getKngUrl();
-                layer.msg('已完成30秒后返回列表页：' + kng_href);
+                layer.msg('已完成5秒后返回列表页：' + kng_href);
                 window.setTimeout(function () {
                     window.open(kng_href, '_self');
-                }, 30 * 1000)
+                }, 5 * 1000)
             }
         }
 
@@ -323,21 +323,22 @@
 
     // 检测播放状态
     function detectPlaybackStatus() {
-        const date = new Date();
-        console.info(date.toLocaleString() + ' 检测播放状态...')
+        // const date = new Date();
+        // console.info(date.toLocaleString() + ' 检测播放状态...')
         if (myPlayer.getState() == 'playing') {
             myPlayer.setPlaybackRate(2);
             initVideoPauseTimes();
-            console.log("播放中...啥也不操作了");
+            console.log("播放中...");
         } else if (myPlayer.getState() == 'buffering') { // 缓冲
-            layer.msg("缓冲中...刷新");
+            console.log("缓冲中...刷新页面");
             window.setTimeout(function () {
                 initVideoPauseTimes();
                 window.location.reload();
             }, 1000);
 
         } else if (myPlayer.getState() == 'paused') { // 暂停
-            console.log("暂停啦！！！");
+            console.log("暂停啦...执行播放方法...");
+            myPlayer.play();
             let videoPauseTimes = getVideoPauseTimes();
             console.info('视频暂停次数：' + videoPauseTimes)
             videoPauseTimesInc();
@@ -347,11 +348,13 @@
                 window.location.reload();
             }
             myPlayer.play();
-            console.log("开始播放~");
         } else if (myPlayer.getState() == 'complete') {
             console.log($('#lblTitle').text() + "播放完成！！！");
             // 返回上一级
             // GoBack();
+        } else {
+            console.log("未知状态 刷新页面");
+            window.location.reload();
         }
     }
     // 初始化视频暂停次数
