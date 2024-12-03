@@ -77,7 +77,7 @@
             // 完成度检测
             detectionComplete();
 
-        }, 30 * 1000);
+        }, 15 * 1000);
 
     } else if (path.match(/^\/kng\/.*\/video.*/g) || path.match(/^\/kng\/course\/package\/video.*/g) || path.match(/^\/knowledge\/video.*/g)) { // 视频页
         // 视频页
@@ -93,7 +93,7 @@
             // 完成度检测
             detectionComplete();
 
-        }, 30 * 1000);
+        }, 15 * 1000);
     } else if (path.match(/^\/kng\/\w*\/package.*/g)) { // 课程包明细页
         console.log('课程包明细页...');
         let progress = $('#lblStudySchedule').text() + "";
