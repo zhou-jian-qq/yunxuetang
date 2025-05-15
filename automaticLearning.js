@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         云学堂全自动刷视频 yunxuetang.cn
 // @namespace    https://github.com/zhou-jian-qq/yunxuetang
-// @version      0.16.13
+// @version      0.16.14
 // @description  云学堂视频播放 文档浏览 自动筛选学习未学习的视频 自动提交考试
 // @author       zhou__jianlei
 // @license      MIT
@@ -69,6 +69,7 @@
 
     } else if (path.match(/^\/kng\/.*\/document.*/g) || path.match(/^\/kng\/course\/package\/document.*/g) || path.match(/^\/knowledge\/document.*/g)) {    // 文档页
         console.log('文档页准备就绪...');
+        support();
         window.setInterval(function () {
             // 检测在线
             detectionOnline();
@@ -82,6 +83,7 @@
     } else if (path.match(/^\/kng\/.*\/video.*/g) || path.match(/^\/kng\/course\/package\/video.*/g) || path.match(/^\/knowledge\/video.*/g)) { // 视频页
         // 视频页
         console.log('视频页准备就绪...');
+        support();
         // 每30秒检测一次
         window.setInterval(function () {
             // 检测在线
@@ -383,6 +385,14 @@
             }
         }
         return null;
+    }
+    // 点赞
+    function support(){
+        window.setTimeout(function () {
+            let knowledgeID = $("#hidKnowledgeID").val();
+            supportKng(knowledgeID,2);
+            console.log('点赞一下。', knowledgeID);
+        }, 10 * 1000);
     }
 
 })();
