@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         云学堂全自动刷视频 yunxuetang.cn
 // @namespace    https://github.com/zhou-jian-qq/yunxuetang
-// @version      0.16.14
+// @version      0.16.15
 // @description  云学堂视频播放 文档浏览 自动筛选学习未学习的视频 自动提交考试
 // @author       zhou__jianlei
 // @license      MIT
@@ -274,12 +274,28 @@
     // 检测多开弹窗
     function checkMoreOpen() {
         console.debug('检测多开弹窗');
-        // 不知道这个还有没有用
+        // 不知道这个还有没有用 这个貌似没用了
         if ($("#dvSingleTrack").length) {
             console.log("防止多开作弊 弹窗");
             StartCurStudy();
         }
-        // 确认文档弹窗是这个了
+        // // id为dvHeartTip 的元素  style 不是 display: none; 的时候执行
+        // if ($("#dvHeartTip").css("display") != "none") {
+        //     console.log("防止多开作弊 弹窗");
+        //     StartCurStudy();
+        // }
+        if ($("#dvHeartTip").length) {
+            console.log("防止多开作弊 弹窗");
+            closeWebPage();
+            // commonHelper.learnKng();
+        }
+        // 暂无法学习此知识。此知识受学习顺序控制，您需要在完成前面知识的学习后才可以学习此知识。
+        if ($("#dvCantPlay2").css("display") != "none") {
+            console.log("检测 受学习顺序控制 弹窗");
+            closeCantPlay2();
+            returnToThePreviousLevel();
+        }
+        // 确认文档弹窗是否存在 这个好像无效了
         if ($("#dvHeartTip").length) {
             console.log("文档页面 正在学习 弹窗");
             learnKng();
@@ -305,6 +321,19 @@
             }
         }
     }
+    // 返回上一级
+    function returnToThePreviousLevel() {
+        console.log("返回上一级");
+        // 检测是否有返回按钮
+        // 根据这个 <span id="divGoBack" style="display: none;" class="iconfont hand icon-fanhui d-in-block font-size-16" onclick="GoBack();"></span>  获取style的display的属性值
+        if (document.getElementById("divGoBack").style.display == 'none') {
+            console.log("返回前一页");
+            window.history.back();
+        } else {
+            console.log("返回上一级");
+            GoBack();
+        }
+    }
 
     // 检测完成(进度100%)
     function detectionComplete() {
@@ -312,14 +341,7 @@
         console.log('进度百分比: ' + percentage);
         if (percentage == '100%') {
             setRefreshKng(true);
-            // 根据这个 <span id="divGoBack" style="display: none;" class="iconfont hand icon-fanhui d-in-block font-size-16" onclick="GoBack();"></span>  获取style的display的属性值
-            if (document.getElementById("divGoBack").style.display == 'none') {
-                console.log("返回前一页");
-                window.history.back();
-            } else {
-                console.log("返回上一级");
-                GoBack();
-            }
+            returnToThePreviousLevel();
         }
     }
 
