@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         云学堂全自动刷视频 yunxuetang.cn
 // @namespace    https://github.com/zhou-jian-qq/yunxuetang
-// @version      0.16.15
+// @version      0.16.16
 // @description  云学堂视频播放 文档浏览 自动筛选学习未学习的视频 自动提交考试
 // @author       zhou__jianlei
 // @license      MIT
@@ -21,6 +21,7 @@
 // @match        http*://*.yunxuetang.cn/kng/knowledgecatalogsearch.htm*
 // @grant        GM_xmlhttpRequest
 // @grant        unsafeWindow
+// @grant        GM_addStyle
 // ==/UserScript==
 
 (function () {
@@ -156,8 +157,71 @@
         }, 1000 * 3);
     } else if (path.match(/^\/exam\/exampreview.*/g)) { // 开始考试页面
         console.log('开始考试页面...');
-        let checkbox = '<input type="checkbox" name="auto_submit" id="auto_submit"> 自动提交';  // 这个复选框太low了，有能力的给搞个好看的开关样式
-        $("#btnTest").parent().append(checkbox);
+        let toggleSwitch = '<div class="toggle-switch">\n  <input type="checkbox" name="auto_submit" id="auto_submit" class="toggle-switch-checkbox">\n  <label for="auto_submit" class="toggle-switch-label">\n    <span class="toggle-switch-inner"></span>\n    <span class="toggle-switch-switch"></span>\n  </label>\n  <span class="toggle-switch-text">自动提交</span>\n</div>';
+        
+        $("#btnTest").parent().append(toggleSwitch);
+        
+        // 添加滑块样式
+        GM_addStyle(`
+        .toggle-switch {
+          position: relative;
+          display: inline-block;
+          width: 60px;
+          height: 34px;
+          margin-left: 10px;
+        }
+        .toggle-switch-checkbox {
+          opacity: 0;
+          width: 0;
+          height: 0;
+        }
+        .toggle-switch-label {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: #ccc;
+          border-radius: 34px;
+          cursor: pointer;
+          transition: background-color 0.3s;
+        }
+        .toggle-switch-label:hover {
+          background-color: #b3b3b3;
+        }
+        .toggle-switch-checkbox:checked + .toggle-switch-label {
+          background-color: #2196F3;
+        }
+        .toggle-switch-inner {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          line-height: 34px;
+          font-size: 12px;
+          color: white;
+          text-align: center;
+        }
+        .toggle-switch-switch {
+          position: absolute;
+          top: 2px;
+          left: 2px;
+          width: 30px;
+          height: 30px;
+          background-color: white;
+          border-radius: 50%;
+          transition: transform 0.3s;
+        }
+        .toggle-switch-checkbox:checked + .toggle-switch-label .toggle-switch-switch {
+          transform: translateX(26px);
+        }
+        .toggle-switch-text {
+          margin-left: 70px;
+          line-height: 34px;
+          vertical-align: middle;
+          white-space: nowrap;
+          display: inline-block;
+          margin-right: 10px;
+        }`);
         if (isAutoSubmit()) {
             $('#auto_submit').prop('checked', true);
         } else {
