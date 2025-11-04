@@ -1,0 +1,16 @@
+# 忽略 HTML 相关文件夹
+html/
+
+# IDE 配置
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Node.js
+node_modules/
+npm-debug.log
+
+# 系统文件
+.DS_Store
+Thumbs.db

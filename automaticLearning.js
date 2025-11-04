@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         云学堂全自动刷视频 yunxuetang.cn
 // @namespace    https://github.com/zhou-jian-qq/yunxuetang
-// @version      0.16.16
+// @version      0.16.17
 // @description  云学堂视频播放 文档浏览 自动筛选学习未学习的视频 自动提交考试
 // @author       zhou__jianlei
 // @license      MIT
@@ -53,7 +53,7 @@
     // 任务列表页
     if (path.match(/^\/plan.*/g)) {
         console.log('学习任务列表页...');
-        $('.w-150').each(function (index, item) {
+        $('.w-170').each(function (index, item) {
             let text = $(item).children('.text-grey').eq(1).text();
             console.log('任务' + (index + 1) + ', 播放进度:' + text);
             if (text.includes('%') && text !== '100%') {
@@ -158,9 +158,9 @@
     } else if (path.match(/^\/exam\/exampreview.*/g)) { // 开始考试页面
         console.log('开始考试页面...');
         let toggleSwitch = '<div class="toggle-switch">\n  <input type="checkbox" name="auto_submit" id="auto_submit" class="toggle-switch-checkbox">\n  <label for="auto_submit" class="toggle-switch-label">\n    <span class="toggle-switch-inner"></span>\n    <span class="toggle-switch-switch"></span>\n  </label>\n  <span class="toggle-switch-text">自动提交</span>\n</div>';
-        
+
         $("#btnTest").parent().append(toggleSwitch);
-        
+
         // 添加滑块样式
         GM_addStyle(`
         .toggle-switch {
@@ -473,10 +473,10 @@
         return null;
     }
     // 点赞
-    function support(){
+    function support() {
         window.setTimeout(function () {
             let knowledgeID = $("#hidKnowledgeID").val();
-            supportKng(knowledgeID,2);
+            supportKng(knowledgeID, 2);
             console.log('点赞一下。', knowledgeID);
         }, 10 * 1000);
     }
