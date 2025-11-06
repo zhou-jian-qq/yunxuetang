@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         云学堂全自动刷视频 yunxuetang.cn
 // @namespace    https://github.com/zhou-jian-qq/yunxuetang
-// @version      0.16.17
+// @version      0.16.18
 // @description  云学堂视频播放 文档浏览 自动筛选学习未学习的视频 自动提交考试
 // @author       zhou__jianlei
 // @license      MIT
@@ -411,10 +411,10 @@
 
     // 检测播放状态
     function detectPlaybackStatus() {
-        // const date = new Date();
-        // console.info(date.toLocaleString() + ' 检测播放状态...')
         if (myPlayer.getState() == 'playing') {
             myPlayer.setPlaybackRate(2);
+            // 设置音量为静音
+            myPlayer.setVolume(0)
             initVideoPauseTimes();
             console.log("播放中...");
         } else if (myPlayer.getState() == 'buffering') { // 缓冲
