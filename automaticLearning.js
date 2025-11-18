@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         云学堂全自动刷视频 yunxuetang.cn
 // @namespace    https://github.com/zhou-jian-qq/yunxuetang
-// @version      0.16.18
+// @version      0.16.19
 // @description  云学堂视频播放 文档浏览 自动筛选学习未学习的视频 自动提交考试
 // @author       zhou__jianlei
 // @license      MIT
@@ -365,24 +365,68 @@
             learnKng();
         }
     }
+    // 判断元素是否可见
+    function isElementVisible(el) {
+        return !!el && el.offsetHeight > 0 && el.offsetWidth > 0 && el.offsetParent !== null;
+    }
+
+    // 获取继续学习按钮
+    function findResumeStudyButton(modal) {
+        if (!modal) {
+            return null;
+        }
+        var byId = modal.querySelector('#reStartStudy');
+        if (byId && isElementVisible(byId)) {
+            return byId;
+        }
+        var candidates = modal.querySelectorAll('.btnok, input[type="button"], button');
+        for (var i = 0; i < candidates.length; i++) {
+            var btn = candidates[i];
+            if (!isElementVisible(btn)) {
+                continue;
+            }
+            var text = (btn.value || btn.innerText || btn.textContent || '').trim();
+            if (text.indexOf('继续') !== -1 || text.indexOf('我在') !== -1) {
+                return btn;
+            }
+        }
+        return null;
+    }
+
     // 在线检测
     function detectionOnline() {
         const date = new Date();
-        var dom = document.getElementById("dvWarningView");
+        var modal = document.getElementById('dvWarningView');
         console.info(date.toLocaleString() + ' 检测是否有弹窗...');
-        if (dom) {
-            console.debug('弹窗出来了');
-            const cont = dom.getElementsByClassName("playgooncontent")[0].innerText;
-            if (cont.indexOf("请不要走开喔") != -1) {
-                document.getElementsByClassName("btnok")[1].click();
-            } else {
-                // 没遇到过这种情况 不能处理了 返回上一级
-                console.error('没遇到过这种情况 不能处理了, 弹窗内容：' + cont);
-                window.setTimeout(function () {
-                    // 刷新当前页吧
-                    window.location.reload();
-                }, 5 * 1000)
+        if (!modal || !isElementVisible(modal)) {
+            return;
+        }
+        var contentNode = modal.getElementsByClassName('playgooncontent')[0];
+        var contentText = contentNode ? contentNode.innerText.trim() : '';
+        var heartbeatKeywords = ['亲，您在吗', '请不要走开', '继续学习', '我在'];
+        var matchedHeartbeat = false;
+        for (var i = 0; i < heartbeatKeywords.length; i++) {
+            if (contentText.indexOf(heartbeatKeywords[i]) !== -1) {
+                matchedHeartbeat = true;
+                break;
             }
+        }
+        if (!matchedHeartbeat) {
+            console.warn('检测在线：未识别的弹窗内容 -> ' + contentText);
+            window.setTimeout(function () {
+                window.location.reload();
+            }, 5 * 1000);
+            return;
+        }
+        var button = findResumeStudyButton(modal);
+        if (button) {
+            console.debug('检测在线：点击按钮 -> ' + (button.value || button.innerText || '按钮'));
+            button.click();
+        } else {
+            console.error('检测在线：未找到继续学习按钮，5秒后刷新当前页');
+            window.setTimeout(function () {
+                window.location.reload();
+            }, 5 * 1000);
         }
     }
     // 返回上一级
